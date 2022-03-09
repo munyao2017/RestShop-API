@@ -11,8 +11,8 @@ const productRoutes = require('./api/routes/products');
 const orderRoutes = require('./api/routes/orders');
 
 mongoose.connect('mongodb+srv://munyao-2022:' +
- process.env.MONGO_ATLAS_PW +
- '@munyao-2022.paj4h.mongodb.net/REST-SHOP?retryWrites=true&w=majority',
+process.env.MONGO_ATLAS_PW +
+'@munyao-2022.paj4h.mongodb.net/REST-SHOP?retryWrites=true&w=majority',
  {
     useMongoClient: true
 }

@@ -37,8 +37,8 @@ app.use((req, res, next) =>{
 
 
 //routes that handle requests
-app.use('/products', productRoutes);
-app.use('/orders', orderRoutes);
+app.use('/products', productsRoutes);
+app.use('/orders', ordersRoutes);
 app.use('/users', userRoutes);
 
 

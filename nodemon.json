@@ -1,5 +1,6 @@
 {
     "env": {
-        "MONGO_ATLAS_PW":"/munyao-2022"
+        "MONGO_ATLAS_PW":"/munyao-2022",
+        "JWT_KEY": "secret"
     }
 }

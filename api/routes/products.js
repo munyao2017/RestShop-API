@@ -3,16 +3,41 @@ const express = require('express');
 //const { default: mongoose } = require('mongoose');
 const router = express.Router();
 const mongoose = require('mongoose');
-
 const multer = require('multer');
-const upload = multer({dest: 'uploads/'});
+const checkAuth = require('../middleware/check-auth');
+
+const storage = multer.diskStorage({
+    destination: function(req, file, cb){
+        cb(null, './uploads/');
+    },
+    filename: function(req, file, cb){
+        cb(null, new Dates().toISOString() + file.originalname);
+    }
+});
+
+const fileFilter = (req, file,cb) => {
+    //reject a file
+    if(file.mimetype === 'image/jpeg' || mimetype === 'image/png'){
+        cb(null, true);
+    }else{
+        cd(null, false);
+    }
+};
+
+const upload = multer({
+    storage: storage, 
+    limits: {
+    fileSize: 1024*1024*5
+    },
+    fileFilter: fileFilter
+});
 const { request } = require('../../app');
 
 const product = require('../models/products');
 
 router.get('/',(req,res, next) => {
    product.find()
-   .select('name price _id')
+   .select('name price _id productImage')
    .exec()
    .then(docs => {
        const response ={
@@ -21,6 +46,7 @@ router.get('/',(req,res, next) => {
                return {
                    name: doc.name,
                    price: doc.price,
+                   productImage: doc.productImage,
                    _id: doc._id,
                    request: {
                        type: 'GET',
@@ -33,24 +59,27 @@ router.get('/',(req,res, next) => {
        //res.status(200).json(docs);
    })
    .catch(err => {
-    console.log(err);
-    res.status(500).json({
-        error: err
+    const user = new User ({
+        _id: new mongoose.Types.ObjectId(),
+        email: req.body.email,
+        password: req.body.password
    })
     });
 });
 
-router.post('/', upload.single('product image'), (req,res, next) => {
+router.post('/', checkAuth, upload.single('product image'),(req,res, next) => {
    console.log(req.file);
     const product = new product({
         _id: new mongoose.Types.ObjectId(),
         name: req.body.name,
-        price: req.body.price
+        price: req.body.price,
+        productImage: req.file.path
     });
     product.save().then(result =>{  
         console.log(result);
       })
-      .catch(err => console.log(err));
+      .catch(err => 
+        console.log(err));
     res.status(201).json({
         message: 'Created product successfully',
         createdproduct: {
@@ -62,7 +91,6 @@ router.post('/', upload.single('product image'), (req,res, next) => {
                 url: 'http://localhost:3005/products/'+ result._id
 
             }
-
         }
     });
 });
@@ -70,7 +98,7 @@ router.post('/', upload.single('product image'), (req,res, next) => {
 router.get('/:productId',(req,res,next) =>{
     const id = req.params.productId;
     product.findById(id)
-    .select('name price _id')
+    .select('name price _id productImage')
     .exec()
     .then(doc => {
         console.log("From database", docs);

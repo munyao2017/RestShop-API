@@ -1,15 +1,11 @@
 const express = require('express');
-//const res = require('express/lib/response');
 const router = express.Router();
-const mongoose = require('mongoose');
-
-const Orders = require('../models/orders');
-const products = require('../models/products');
 const checkAuth = require('../middleware/check-auth');
 
-const ordersController = require('../controllers/orders');
+const ordersController = require('../controllers/order');
+
 //handle incoming GET requests to /orders
-router.get('/', checkAuth, ordersController.orders-get-all);
+router.get('/', checkAuth, ordersController.orders_get_all);
 
 router.post('/:', checkAuth, ordersController.orders_create_order);
 

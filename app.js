@@ -1,5 +1,4 @@
 const express = require('express');
-//const res = require('express/lib/response');
 const app = express();
 const morgan =require('morgan');
 const bodyParser = require('body-parser');
@@ -7,19 +6,29 @@ const mongoose = require('mongoose');
 
 const productRoutes = require('./api/routes/products');
 const orderRoutes = require('./api/routes/orders');
-//const userRoutes = require('./api/routes/users');
+const userRoutes = require('./api/routes/user');
 
 
 
 
-mongoose.connect('mongodb+srv://munyao-2022:' +
-process.env.MONGO_ATLAS_PW +
+//mongoose.connect('mongodb+srv://munyao-2022:Mutanu@45@host.gcp.mongodb.net/test?retryWrites=true'
 
-'@munyao-2022.paj4h.mongodb.net/REST-SHOP?retryWrites=true&w=majority',
- {
-    useMongoClient: true
-}
-);
+    //'mongodb+srv://munyao-2022:' +
+//process.env.MONGO_ATLAS_PW +
+
+//'@munyao-2022.paj4h.mongodb.net/REST-SHOP?retryWrites=true&w=majority',
+//'mongodb+srv://myuser:Mutanu@45@host.gcp.mongodb.net/test?retryWrites=true',
+//'@munyao-2022.Mutanu@45.mongodb.net/REST-SHOP?retryWrites=true&w=majority',
+
+//{
+  //  useMongoClient: true
+//}
+//);
+
+mongoURI =  "mongodb+srv://Esther Munyao:mutanu2017@devconnector.jpokp.mongodb.net/dbname?retryWrites=true&w=majority" 
+
+mongoose .connect(mongoURI, { useNewUrlParser: true }) .then(() => console.log("MongoDB connected")) .catch((err) => console.log(err));
+
 mongoose.Promise =global.Promise;
 
 app.use(morgan('dev'));
@@ -43,7 +52,7 @@ app.use((req, res, next) =>{
 //routes that handle requests
 app.use('/products', productRoutes);
 app.use('/orders', orderRoutes);
-//app.use('/users', userRoutes);
+app.use('/user', userRoutes);
 
 
 
@@ -51,10 +60,10 @@ app.use((req, res, next) =>{
     const error = new Error('Not found');
     error.status = 404;
     next(error);
-});
+})
 
 app.use((error, req, res, next) => {
-    res.status(err.status || 500);
+    res.status(error.status || 500);
     res.json({
         error: {
             message: error.message
